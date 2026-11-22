@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export function ReserveButton({ onReserve, size = 'md' }: { onReserve: () => void; size?: 'md' | 'lg' }) {
   return (
     <button type="button" className={`btn btn-primary ${size}`} onClick={onReserve}>
-      Reserve my seat
+      <span>Reserve my seat</span>
     </button>
   )
 }
@@ -12,7 +12,7 @@ export function ReserveButton({ onReserve, size = 'md' }: { onReserve: () => voi
 export function PricingButton({ size = 'md' }: { size?: 'md' | 'lg' }) {
   return (
     <Link to="/pricing" className={`btn btn-ghost ${size}`}>
-      Pricing
+      <span>Pricing</span>
     </Link>
   )
 }

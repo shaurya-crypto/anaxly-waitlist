@@ -37,7 +37,7 @@ export default function ReserveModal({ open, onClose }: { open: boolean; onClose
 
   return (
     <div className="modal-back" onClick={onClose} role="presentation">
-      <div className="modal" role="dialog" aria-modal="true" aria-label="Reserve my seat" onClick={(e) => e.stopPropagation()}>
+      <div className="modal beam" role="dialog" aria-modal="true" aria-label="Reserve my seat" onClick={(e) => e.stopPropagation()}>
         {state === 'done' ? (
           <>
             <h3>You are on the list.</h3>

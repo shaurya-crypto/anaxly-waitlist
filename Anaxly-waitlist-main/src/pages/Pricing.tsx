@@ -60,7 +60,7 @@ export default function Pricing({ onReserve }: { onReserve: () => void }) {
       </div>
       <div className="plans">
         {PLANS.map((p) => (
-          <article key={p.name} className={`plan${p.popular ? ' popular' : ''}`}>
+          <article key={p.name} className={`plan${p.popular ? ' popular beam' : ''}`}>
             <span className="badge">{p.badge}</span>
             <h2>{p.name}</h2>
             <p className="plan-desc">{p.desc}</p>

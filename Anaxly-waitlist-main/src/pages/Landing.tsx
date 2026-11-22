@@ -17,6 +17,13 @@ const ORBIT = [
   { h: 'Graphs', p: 'See the maths move.', icon: '∿', tint: '#E3ECF6' },
 ]
 
+// Cursor-tracked glow on the feature cards' borders.
+function spot(e: React.PointerEvent<HTMLElement>) {
+  const r = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
+  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
+}
+
 export default function Landing({ onReserve }: { onReserve: () => void }) {
   const root = useRef<HTMLDivElement>(null)
 
@@ -128,7 +135,7 @@ export default function Landing({ onReserve }: { onReserve: () => void }) {
 
       <section className="points">
         {POINTS.map((x) => (
-          <article className="point" key={x.h}>
+          <article className="point" key={x.h} data-spot onPointerMove={spot}>
             <h2>{x.h}</h2>
             <p>{x.p}</p>
           </article>
