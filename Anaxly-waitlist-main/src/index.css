@@ -84,10 +84,10 @@ main { position: relative; z-index: 1; }
 @keyframes pulse { 70% { box-shadow: 0 0 0 7px rgba(34,160,107,0); } 100% { box-shadow: 0 0 0 0 rgba(34,160,107,0); } }
 @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
 
-/* Hero, reference layout: serif title, side cards, orbit stage */
+/* Hero, reference layout: Inter title, side cards, orbit stage */
 .hero { max-width: 1240px; margin: 0 auto; min-height: 0; padding: 120px 20px 0; display: block; overflow: visible; }
 .hero-inner { margin: 0 auto; position: relative; z-index: 2; }
-.hero-title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; line-height: .95; font-size: clamp(3rem, 8vw, 6.6rem); display: grid; }
+.hero-title { font-family: inherit; font-weight: 800; letter-spacing: -0.045em; line-height: .95; font-size: clamp(3rem, 8vw, 6.6rem); display: grid; }
 .hero-title em { font-style: italic; }
 .hero .lede { max-width: 540px; color: var(--ink-muted); }
 .hero .btn-primary { background: var(--ink); }
@@ -144,7 +144,7 @@ main { position: relative; z-index: 1; }
   box-shadow: 0 30px 70px rgba(15,23,42,.22);
   display: grid; place-content: center; gap: 6px; text-align: center; color: #F1EEE4;
 }
-.stage-board span { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: clamp(2rem, 4vw, 2.8rem); }
+.stage-board span { font-weight: 600; font-style: italic; letter-spacing: -0.03em; font-size: clamp(2rem, 4vw, 2.8rem); }
 .stage-board small { font-size: 13px; color: #B9C2B8; }
 
 .corner { position: absolute; z-index: 2; bottom: 60px; font-size: 14px; color: var(--ink-muted); text-align: left; line-height: 1.45; }
@@ -316,3 +316,30 @@ h1 { font-size: clamp(2.4rem, 7vw, 5.2rem); line-height: 1.02; letter-spacing: -
   .beam::after { animation: none; }
   .lhl::before, .lhl::after { transition: none; }
 }
+
+/* Billing toggle + extras on pricing */
+.cycle { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); }
+.cycle button { font: inherit; font-size: 14px; font-weight: 600; border: 0; background: transparent; color: var(--ink-2); padding: 8px 18px; border-radius: 999px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.cycle button.on { background: var(--accent); color: #fff; }
+.cycle small { font-size: 11px; font-weight: 600; opacity: .8; }
+.signed-in { font-size: 14px; color: var(--ink-muted); }
+.signed-in button { font: inherit; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; }
+.plan-save { min-height: 1.2em; font-size: 13px; font-weight: 500; color: var(--accent); margin-top: -8px; }
+.plan .btn:disabled { opacity: .6; cursor: progress; }
+
+/* Login */
+.auth { min-height: 100dvh; display: grid; place-items: center; padding: 120px 16px 60px; }
+.auth-card { width: min(440px, 100%); background: #fff; border: 1px solid var(--border); border-radius: 28px; padding: 36px 32px; display: grid; gap: 14px; box-shadow: 0 30px 80px rgba(15,23,42,.10); }
+.auth-card h1 { font-size: clamp(1.6rem, 4vw, 2rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 800; }
+.auth-sub { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.auth-card form { display: grid; gap: 12px; }
+.auth-card input { font: inherit; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-strong); outline: none; width: 100%; }
+.auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.auth-code { text-align: center; font-size: 22px !important; letter-spacing: .4em; font-weight: 600; }
+.auth-google { width: 100%; }
+.auth-or { display: flex; align-items: center; gap: 12px; color: var(--ink-muted); font-size: 13px; }
+.auth-or::before, .auth-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.auth-link { font: inherit; font-size: 14px; border: 0; background: none; color: var(--ink-muted); cursor: pointer; text-decoration: underline; }
+.auth-card .err { color: #b91c1c; font-size: 14px; }
+.auth-card .btn:disabled { opacity: .6; cursor: progress; }
+.price-head .err { color: #b91c1c; font-size: 14px; }

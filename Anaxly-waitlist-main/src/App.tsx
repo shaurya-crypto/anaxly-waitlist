@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Lenis from 'lenis'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import LineField from './components/LineField'
-import ReserveModal from './components/ReserveModal'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
+import Login from './pages/Login'
+import { useSession } from './lib/supabase'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
-  const [open, setOpen] = useState(false)
+  const session = useSession()
+  const navigate = useNavigate()
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -34,7 +36,8 @@ export default function App() {
     return () => clearTimeout(id)
   }, [pathname])
 
-  const reserve = () => setOpen(true)
+  // "Reserve my seat": sign in first, then show the plans.
+  const reserve = () => navigate(session ? '/pricing' : '/login')
 
   return (
     <>
@@ -43,11 +46,11 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Landing onReserve={reserve} />} />
-          <Route path="/pricing" element={<Pricing onReserve={reserve} />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <Footer onReserve={reserve} />
-      <ReserveModal open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
