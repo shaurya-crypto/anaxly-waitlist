@@ -8,7 +8,7 @@ if (!url || !key) console.warn('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY missi
 
 // Same Supabase project as the main Anaxly app, so accounts are shared.
 export const supabase = createClient(url ?? 'http://localhost', key ?? 'missing', {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 })
 
 /** Current session; `undefined` while loading, `null` when signed out. */

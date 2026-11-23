@@ -11,7 +11,7 @@ export default function Login() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
-  // Signed in (email code or Google redirect): add to waitlist, then show plans.
+  // Signed in via email code (no redirects, so users never leave this site): add to waitlist, then show plans.
   useEffect(() => {
     if (!session) return
     joinWaitlist(session).finally(() => navigate('/pricing', { replace: true }))
@@ -34,15 +34,6 @@ export default function Login() {
     if (error) setError(error.message)
   }
 
-  async function google() {
-    setError('')
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/login` },
-    })
-    if (error) setError(error.message)
-  }
-
   return (
     <div className="auth">
       <div className="auth-card beam">
@@ -56,10 +47,6 @@ export default function Login() {
 
         {step === 'email' ? (
           <>
-            <button type="button" className="btn btn-ghost md auth-google" onClick={google}>
-              <span>Continue with Google</span>
-            </button>
-            <div className="auth-or"><span>or</span></div>
             <form onSubmit={sendCode}>
               <input type="email" required autoFocus placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
               <button className="btn btn-primary md" disabled={busy}><span>{busy ? 'Sending…' : 'Email me a code'}</span></button>
