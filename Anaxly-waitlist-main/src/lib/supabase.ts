@@ -1,33 +1,21 @@
-import { createClient, type Session } from '@supabase/supabase-js'
-import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
-if (!url || !key) console.warn('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY missing: auth disabled.')
+if (!url || !key) console.warn('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY missing: waitlist signups disabled.')
 
-// Same Supabase project as the main Anaxly app, so accounts are shared.
+// Anon client only: no auth sessions, no redirects.
 export const supabase = createClient(url ?? 'http://localhost', key ?? 'missing', {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 })
 
-/** Current session; `undefined` while loading, `null` when signed out. */
-export function useSession() {
-  const [session, setSession] = useState<Session | null | undefined>(undefined)
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
-    const { data } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
-    return () => data.subscription.unsubscribe()
-  }, [])
-  return session
-}
+export type PlanId = 'free' | 'scholar' | 'topper' | 'mastery'
+export type Cycle = 'monthly' | 'annual'
 
-/** Adds the signed-in user to the waitlist table (idempotent). */
-export async function joinWaitlist(session: Session, extra: { plan?: string; billing_cycle?: string } = {}) {
-  const { error } = await supabase.from('waitlist').upsert(
-    { user_id: session.user.id, email: session.user.email, ...extra },
-    { onConflict: 'user_id' },
-  )
-  if (error) console.warn('waitlist upsert failed:', error.message)
+/** Saves (or updates) an email on the waitlist via the join_waitlist RPC. */
+export async function joinWaitlist(email: string, plan: PlanId, cycle: Cycle) {
+  const { error } = await supabase.rpc('join_waitlist', { p_email: email, p_plan: plan, p_billing_cycle: cycle })
+  if (error) console.warn('join_waitlist failed:', error.message)
   return !error
 }

@@ -8,13 +8,11 @@ import Footer from './components/Footer'
 import LineField from './components/LineField'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
-import Login from './pages/Login'
-import { useSession } from './lib/supabase'
+import Join from './pages/Join'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function App() {
-  const session = useSession()
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -36,8 +34,8 @@ export default function App() {
     return () => clearTimeout(id)
   }, [pathname])
 
-  // "Reserve my seat": sign in first, then show the plans.
-  const reserve = () => navigate(session ? '/pricing' : '/login')
+  // "Reserve my seat": email + plan form. No accounts, nothing links to the main app.
+  const reserve = () => navigate('/join')
 
   return (
     <>
@@ -47,7 +45,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing onReserve={reserve} />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/join" element={<Join />} />
         </Routes>
       </main>
       <Footer onReserve={reserve} />

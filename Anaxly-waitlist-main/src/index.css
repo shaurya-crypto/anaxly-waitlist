@@ -335,8 +335,10 @@ h1 { font-size: clamp(2.4rem, 7vw, 5.2rem); line-height: 1.02; letter-spacing: -
 .auth-card form { display: grid; gap: 12px; }
 .auth-card input { font: inherit; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-strong); outline: none; width: 100%; }
 .auth-card input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.auth-code { text-align: center; font-size: 22px !important; letter-spacing: .4em; font-weight: 600; }
-.auth-link { font: inherit; font-size: 14px; border: 0; background: none; color: var(--ink-muted); cursor: pointer; text-decoration: underline; }
 .auth-card .err { color: #b91c1c; font-size: 14px; }
 .auth-card .btn:disabled { opacity: .6; cursor: progress; }
 .price-head .err { color: #b91c1c; font-size: 14px; }
+.auth-card .field { display: grid; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.auth-card select { font: inherit; font-weight: 500; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border-strong); background: #fff; color: var(--ink); outline: none; width: 100%; }
+.auth-card select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.auth-card .cycle { justify-self: start; }
