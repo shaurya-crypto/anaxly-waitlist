@@ -47,7 +47,7 @@ export default function Pricing() {
               <p className="plan-save">{cycle === 'annual' ? p.savings : ''}</p>
               <ul>{p.features.map((f) => <li key={f}>{f}</li>)}</ul>
               <button type="button" className={`btn ${p.popular ? 'btn-primary' : 'btn-ghost'} md`} onClick={() => navigate(`/join?plan=${p.id}&cycle=${cycle}`)}>
-                <span>Reserve my seat</span>
+                <span>{p.cta}</span>
               </button>
             </article>
           )
