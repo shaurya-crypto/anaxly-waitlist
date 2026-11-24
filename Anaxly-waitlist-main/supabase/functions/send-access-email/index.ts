@@ -1,6 +1,6 @@
-// Supabase Edge Function: emails an approved waitlist member their access + payment details via Resend.
+// Supabase Edge Function: emails an approved waitlist member their access + payment details via Brevo.
 // Called by the waitlist_on_update trigger. Deploy with: supabase functions deploy send-access-email --no-verify-jwt
-// Secrets: WAITLIST_FUNCTION_SECRET, RESEND_API_KEY, ACCESS_FROM_EMAIL, ACCESS_URL
+// Secrets: WAITLIST_FUNCTION_SECRET, BREVO_API_KEY, ACCESS_FROM_EMAIL, ACCESS_URL
 // (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided automatically.)
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
@@ -53,18 +53,23 @@ Deno.serve(async (req) => {
     <p style="font-size:13px;color:#64748B">Sign up with this email (${esc(row.email)}) so we can match your seat.</p>
   </div>`
 
-  const res = await fetch('https://api.resend.com/emails', {
+  // ACCESS_FROM_EMAIL: "Anaxly <hello@anaxly.com>" or a bare address (must be a verified Brevo sender).
+  const from = env('ACCESS_FROM_EMAIL')
+  const m = from.match(/^\s*(.*?)\s*<([^>]+)>\s*$/)
+  const sender = m ? { name: m[1] || 'Anaxly', email: m[2] } : { name: 'Anaxly', email: from.trim() }
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${env('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
+    headers: { 'api-key': env('BREVO_API_KEY'), 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({
-      from: env('ACCESS_FROM_EMAIL'),
-      to: [row.email],
+      sender,
+      to: [{ email: row.email }],
       subject: 'Your Anaxly access is ready',
-      html,
+      htmlContent: html,
     }),
   })
   if (!res.ok) {
-    console.error('resend failed', res.status, await res.text())
+    console.error('brevo failed', res.status, await res.text())
     return new Response('email failed', { status: 502 })
   }
 

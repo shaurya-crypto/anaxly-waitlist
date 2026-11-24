@@ -1,4 +1,4 @@
-# Waitlist setup (Supabase + Resend)
+# Waitlist setup (Supabase + Brevo)
 
 Visitors leave an email and a plan. There are no accounts and no links to the main app.
 When you tick `approved` on a row, they get an email with their payment + access details.
@@ -6,16 +6,18 @@ When you tick `approved` on a row, they get an email with their payment + access
 ## 1. Create the table
 Supabase → SQL Editor → run `supabase/migrations/20261123000000_waitlist.sql`.
 
-## 2. Resend
-1. Create an account at resend.com, verify the sending domain (e.g. `anaxly.com`).
-2. Create an API key.
+## 2. Brevo
+1. Create an account at brevo.com.
+2. Senders, Domains & Dedicated IPs → add and verify your sender (e.g. `hello@anaxly.com`);
+   authenticate the domain (DKIM/DMARC records) for good deliverability.
+3. SMTP & API → API Keys → create a key (starts with `xkeysib-`).
 
 ## 3. Deploy the email function
 ```bash
 supabase functions deploy send-access-email --no-verify-jwt --project-ref <project-ref>
 supabase secrets set --project-ref <project-ref> \
   WAITLIST_FUNCTION_SECRET=<long-random-string> \
-  RESEND_API_KEY=<resend-key> \
+  BREVO_API_KEY=<brevo-api-key> \
   ACCESS_FROM_EMAIL="Anaxly <hello@anaxly.com>" \
   ACCESS_URL=<link for the "Complete payment & get access" button>
 ```
