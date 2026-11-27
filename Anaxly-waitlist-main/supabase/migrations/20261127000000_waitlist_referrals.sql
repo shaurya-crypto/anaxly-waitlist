@@ -10,6 +10,42 @@ alter table public.waitlist
 
 create index if not exists waitlist_referred_by_idx on public.waitlist (referred_by);
 
+alter table public.waitlist
+  add column if not exists welcome_email_sent_at timestamptz;
+
+-- Send a welcome confirmation email automatically when a new visitor joins the waitlist.
+create or replace function public.waitlist_on_insert()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  fn_url text;
+  fn_secret text;
+begin
+  if new.welcome_email_sent_at is null then
+    select decrypted_secret into fn_url from vault.decrypted_secrets where name = 'waitlist_function_url';
+    select decrypted_secret into fn_secret from vault.decrypted_secrets where name = 'waitlist_function_secret';
+    if fn_url is null or fn_secret is null then
+      raise warning 'waitlist vault secrets missing; welcome email not sent for %', new.email;
+    else
+      perform net.http_post(
+        url := fn_url,
+        headers := jsonb_build_object('Content-Type', 'application/json', 'x-waitlist-secret', fn_secret),
+        body := jsonb_build_object('id', new.id, 'type', 'welcome')
+      );
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists waitlist_on_insert on public.waitlist;
+create trigger waitlist_on_insert
+  after insert on public.waitlist
+  for each row execute function public.waitlist_on_insert();
+
 -- Replace the 3-argument signup function with one that accepts an optional referral code
 -- and returns the visitor's own code.
 drop function if exists public.join_waitlist(text, text, text);
