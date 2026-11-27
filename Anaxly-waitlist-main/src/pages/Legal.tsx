@@ -1,14 +1,16 @@
-import { Link } from 'react-router-dom'
+// Waitlist-only legal pages. Tone, contact and minors/DPDP wording follow the main Anaxly app
+// (AI_TUTOR src/app/privacy and src/app/terms), trimmed to what this waitlist site actually does.
 
-const UPDATED = '27 November 2026'
-const CONTACT = 'support@anaxly.com'
+const UPDATED = 'November 27, 2026'
+const CONTACT = 'shauryaprabhakar097@gmail.com'
+const Mail = () => <a href={`mailto:${CONTACT}`}>{CONTACT}</a>
 
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
+function Shell({ title, tag, children }: { title: string; tag: string; children: React.ReactNode }) {
   return (
     <article className="legal">
-      <p className="eyebrow">Legal</p>
+      <p className="eyebrow">{tag}</p>
       <h1>{title}</h1>
-      <p className="legal-updated">Last updated: {UPDATED}</p>
+      <p className="legal-updated">Last Updated &amp; Effective Date: {UPDATED}</p>
       {children}
     </article>
   )
@@ -16,105 +18,109 @@ function Shell({ title, children }: { title: string; children: React.ReactNode }
 
 export function Privacy() {
   return (
-    <Shell title="Privacy Policy">
+    <Shell title="Privacy Policy" tag="Waitlist Privacy">
+      <h2>1. Our Privacy Commitment</h2>
       <p>
-        This policy explains what Anaxly ("we", "us") collects through this waitlist website and how we use it.
-        The waitlist has no accounts and no logins.
+        This Privacy Policy covers the <strong>Anaxly waitlist website</strong> only. The waitlist has no accounts, no
+        logins and no payments. We follow the <strong>Digital Personal Data Protection (DPDP) Act</strong>, and we{' '}
+        <strong>never sell your data, never show third-party advertisements, and never use your information for unrelated marketing.</strong>
       </p>
 
-      <h2>What we collect</h2>
+      <h2>2. Information We Collect</h2>
+      <p>When you reserve a seat, we store only:</p>
       <ul>
-        <li><b>Your email address</b>, which you enter to reserve a seat.</li>
-        <li><b>The plan and billing cycle you picked</b> (for example, Scholar, billed annually).</li>
-        <li><b>When you joined</b>, plus whether and when we sent you an access email.</li>
+        <li><strong>Your email address.</strong></li>
+        <li><strong>The plan and billing cycle you chose</strong> (for example, Scholar, billed annually).</li>
+        <li><strong>When you joined</strong>, and whether and when we sent you an access email.</li>
       </ul>
-      <p>We do not collect payment details on this site, and we do not use advertising or tracking cookies.</p>
+      <p>We do not collect names, phone numbers or payment details on this site, and we do not use tracking or advertising cookies.</p>
 
-      <h2>How we use it</h2>
+      <h2>3. How We Use It</h2>
       <ul>
         <li>To hold your place on the waitlist for the plan you chose.</li>
-        <li>To email you when your access opens, with payment and access details.</li>
+        <li>To email you once when your access opens, with payment and access details.</li>
         <li>To reply if you contact us.</li>
       </ul>
-      <p>We do not sell your data or share it with advertisers.</p>
 
-      <h2>Who processes it</h2>
+      <h2>4. Third-Party Sub-Processors</h2>
       <ul>
-        <li><b>Supabase</b> stores the waitlist database.</li>
-        <li><b>Resend</b> sends our access emails.</li>
+        <li><strong>Supabase (PostgreSQL):</strong> Stores the waitlist, protected by Row Level Security (RLS).</li>
+        <li><strong>Resend:</strong> Sends the access email when your seat is approved.</li>
       </ul>
-      <p>These providers process data only to run these services for us.</p>
 
-      <h2>How long we keep it</h2>
+      <h2>5. Protection of Minor Students</h2>
       <p>
-        We keep your waitlist entry until Anaxly launches and your access email has been handled, or until you ask us
-        to delete it, whichever comes first.
+        Anaxly is built for school students in Classes 6–12. If you are under 18, please have a parent or guardian join
+        the waitlist for you, or get their consent first. Parents and guardians may ask us to delete a child's entry at any time.
       </p>
 
-      <h2>Your choices</h2>
-      <p>
-        You can ask us to see, correct or delete your data, or to remove you from the waitlist, by emailing{' '}
-        <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
-      </p>
+      <h2>6. Retention, Your Rights &amp; Deletion</h2>
+      <div className="legal-box">
+        <p>
+          We keep your entry until Anaxly launches and your access email has been handled, or until you ask us to remove
+          it. To see, correct or delete your entry, email: <Mail />
+        </p>
+        <p>All deletion requests are verified and executed within 7 business days.</p>
+      </div>
 
-      <h2>Children</h2>
-      <p>
-        Anaxly is built for school students. If you are under 18, please have a parent or guardian join the waitlist
-        for you, or get their permission first.
-      </p>
-
-      <h2>Changes</h2>
-      <p>If we update this policy, we will change the date above. Significant changes will be emailed to people on the waitlist.</p>
-
-      <p>See also our <Link to="/terms">Terms of Service</Link>.</p>
+      <h2>7. Contact &amp; Grievance Officer</h2>
+      <div className="legal-box">
+        <h3>Shaurya Prabhakar</h3>
+        <p>Data Protection &amp; Grievance Lead</p>
+        <p><Mail /></p>
+      </div>
     </Shell>
   )
 }
 
 export function Terms() {
   return (
-    <Shell title="Terms of Service">
-      <p>These terms cover your use of the Anaxly waitlist website. By joining the waitlist, you agree to them.</p>
+    <Shell title="Terms of Service" tag="Waitlist Terms">
+      <h2>1. Acceptance of Terms</h2>
+      <p>
+        These Terms cover your use of the <strong>Anaxly waitlist website</strong>. By reserving a seat, you agree to them
+        and to our Privacy Policy. Anaxly is designed for school students in <strong>Classes 6 to 12</strong> (CBSE, ICSE
+        and IB). If you are under 18, you confirm you have a parent or guardian's consent.
+      </p>
 
-      <h2>The waitlist</h2>
+      <h2>2. The Waitlist</h2>
       <ul>
-        <li>Joining the waitlist reserves a seat. It is not a purchase, and you are not charged anything.</li>
-        <li>Joining does not guarantee access by a specific date. We open access in batches.</li>
-        <li>When your access opens, we will email you. Payment and full product terms are presented at that point.</li>
+        <li>Reserving a seat is free. It is not a purchase, and nothing is charged.</li>
+        <li>A reservation does not guarantee access by a specific date. We open access in batches.</li>
+        <li>When your access opens, we email you. Payment and the full product Terms are presented at that point.</li>
       </ul>
 
-      <h2>Plans and pricing</h2>
+      <h2>3. Plans &amp; Launch Pricing</h2>
       <p>
-        The plans and launch prices on this site describe what we intend to offer. We may change plans, features or
-        prices before launch. The price shown when you complete payment is the one that applies.
+        Plans, features and launch prices shown on this site describe what we intend to offer and may change before
+        launch. The price shown when you complete payment is the one that applies.
       </p>
 
-      <h2>Your responsibilities</h2>
+      <h2>4. Prohibited Conduct</h2>
+      <p>You agree NOT to:</p>
       <ul>
-        <li>Use an email address you own, and do not sign up other people without their permission.</li>
-        <li>Do not misuse the site. For example, do not submit automated or bulk signups or try to disrupt the service.</li>
-        <li>If you are under 18, you need a parent or guardian's permission to join.</li>
+        <li>Sign up with an email address you do not own, or sign up other people without their permission.</li>
+        <li>Submit automated or bulk signups, scrape the site, or try to bypass its access controls.</li>
+        <li>Interfere with, disrupt, or overburden the site or its infrastructure.</li>
       </ul>
 
-      <h2>Our content</h2>
-      <p>The Anaxly name, logo and site content belong to Anaxly. Please do not copy them without permission.</p>
+      <h2>5. Intellectual Property</h2>
+      <p>The Anaxly name, designs, illustrations and site content are the exclusive intellectual property of Anaxly.</p>
 
-      <h2>Disclaimer and liability</h2>
+      <h2>6. Disclaimer</h2>
       <p>
-        This site is provided "as is". To the extent the law allows, we are not liable for indirect losses arising
-        from your use of the waitlist.
+        The waitlist site is provided on an "AS IS" and "AS AVAILABLE" basis. Anaxly is a supplemental learning tool and
+        does not guarantee specific school examination marks or academic rankings.
       </p>
 
-      <h2>Removal</h2>
-      <p>
-        You can leave the waitlist at any time by emailing <a href={`mailto:${CONTACT}`}>{CONTACT}</a>. We may remove
-        entries that break these terms.
-      </p>
+      <h2>7. Leaving the Waitlist</h2>
+      <p>You can leave at any time by emailing <Mail />. We may remove entries that break these Terms.</p>
 
-      <h2>Changes</h2>
-      <p>We may update these terms and will change the date above when we do.</p>
-
-      <p>See also our <Link to="/privacy">Privacy Policy</Link>.</p>
+      <h2>8. Contact</h2>
+      <div className="legal-box">
+        <h3>Platform Administrator</h3>
+        <p><Mail /></p>
+      </div>
     </Shell>
   )
 }

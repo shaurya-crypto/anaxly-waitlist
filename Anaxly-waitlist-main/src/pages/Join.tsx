@@ -49,7 +49,7 @@ export default function Join() {
                   {' · '}<Link to="/pricing">Change</Link>
                 </p>
               </div>
-              <p className="auth-sub" style={{ fontSize: 13 }}>
+              <p className="auth-sub consent" style={{ fontSize: 13 }}>
                 By reserving, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
               </p>
               {state === 'error' && <p className="err">Something went wrong. Please try again.</p>}
