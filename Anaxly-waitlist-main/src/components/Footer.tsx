@@ -16,9 +16,9 @@ export default function Footer({ onReserve }: { onReserve: () => void }) {
             <a className="lhl" href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
           </nav>
           <div className="footer-legal">
-            <span>Privacy Policy</span>
+            <Link className="lhl" to="/privacy">Privacy Policy</Link>
             <span aria-hidden="true">•</span>
-            <span>Terms of Service</span>
+            <Link className="lhl" to="/terms">Terms of Service</Link>
             <span aria-hidden="true">•</span>
             <span>© {new Date().getFullYear()} Anaxly Inc.</span>
           </div>

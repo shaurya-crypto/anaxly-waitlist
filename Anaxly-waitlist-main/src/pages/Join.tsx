@@ -49,6 +49,9 @@ export default function Join() {
                   {' · '}<Link to="/pricing">Change</Link>
                 </p>
               </div>
+              <p className="auth-sub" style={{ fontSize: 13 }}>
+                By reserving, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
+              </p>
               {state === 'error' && <p className="err">Something went wrong. Please try again.</p>}
               <button className="btn btn-primary md" disabled={state === 'sending'}>
                 <span>{state === 'sending' ? 'Reserving…' : 'Reserve my seat'}</span>
