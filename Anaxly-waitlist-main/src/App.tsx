@@ -9,6 +9,7 @@ import LineField from './components/LineField'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import Join from './pages/Join'
+import Careers from './pages/Careers'
 import { Privacy, Terms } from './pages/Legal'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/" element={<Landing onReserve={reserve} />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/join" element={<Join />} />
+          <Route path="/careers" element={<Careers />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
         </Routes>
