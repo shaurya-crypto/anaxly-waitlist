@@ -40,8 +40,8 @@ export default function App() {
     return () => clearTimeout(id)
   }, [pathname])
 
-  // "Reserve my seat": pick a plan on /pricing first, then leave an email on /join.
-  const reserve = () => navigate('/pricing')
+  // "Reserve my seat" opens the join page directly; the plan can be picked there (or arrives from /pricing).
+  const reserve = () => navigate('/join')
 
   return (
     <>

@@ -392,3 +392,4 @@ main { position: relative; z-index: 1; }
 .ref-link { display: flex; gap: 8px; align-items: center; }
 .ref-link code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--canvas); color: var(--ink-2); }
 .auth-card .field a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.auth-card .plain-link { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
