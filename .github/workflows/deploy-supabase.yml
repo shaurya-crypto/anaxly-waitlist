@@ -44,4 +44,4 @@ jobs:
             echo ""
           done
       - name: Deploy edge functions
-        run: supabase functions deploy send-access-email --no-verify-jwt --project-ref "$SUPABASE_PROJECT_REF"
+        run: supabase functions deploy send-access-email --no-verify-jwt --remote="$SUPABASE_PROJECT_REF" --yes
