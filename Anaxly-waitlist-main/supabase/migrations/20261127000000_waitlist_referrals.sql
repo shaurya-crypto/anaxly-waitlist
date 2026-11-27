@@ -13,6 +13,7 @@ create index if not exists waitlist_referred_by_idx on public.waitlist (referred
 -- Replace the 3-argument signup function with one that accepts an optional referral code
 -- and returns the visitor's own code.
 drop function if exists public.join_waitlist(text, text, text);
+drop function if exists public.join_waitlist(text, text, text, text);
 
 create or replace function public.join_waitlist(
   p_email text,

@@ -13,7 +13,7 @@ export default function Join() {
   const [copied, setCopied] = useState(false)
   // Plan and cycle arrive from /pricing when set; "Reserve my seat" lands here with none, so default to the popular plan.
   const rawPlan = params.get('plan')
-  const [plan, setPlan] = useState<PlanId>(isPlan(rawPlan) ? rawPlan : 'topper')
+  const plan: PlanId = isPlan(rawPlan) ? rawPlan : 'topper'
   const [cycle, setCycle] = useState<Cycle>(params.get('cycle') === 'monthly' ? 'monthly' : 'annual')
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error' | 'bad-ref'>('idle')
 
@@ -61,7 +61,7 @@ export default function Join() {
                 </div>
               </div>
             )}
-            <Link to="/pricing" className="btn btn-ghost md"><span>Change plan</span></Link>
+            <Link to="/reserve" className="btn btn-ghost md"><span>Change plan</span></Link>
           </>
         ) : (
           <>
@@ -86,12 +86,13 @@ export default function Join() {
                   }}
                 />
               </label>
-              <label className="field">
-                <span>Plan</span>
-                <select value={plan} onChange={(e) => setPlan(e.target.value as PlanId)}>
-                  {PLANS.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-                </select>
-              </label>
+              <div className="field">
+                <span>Selected plan</span>
+                <p className="auth-sub" style={{ fontSize: 14, margin: 0 }}>
+                  <b>{chosen.name}</b> — {plan === 'free' ? 'Free forever' : `₹${(cycle === 'annual' ? chosen.annual : chosen.monthly).toLocaleString('en-IN')}/mo, billed ${cycle}`}
+                  {' · '}<Link className="plain-link" to="/reserve">Click to change</Link>
+                </p>
+              </div>
               {plan !== 'free' && (
                 <div className="cycle" role="group" aria-label="Billing cycle">
                   {(['monthly', 'annual'] as const).map((c) => (
@@ -101,10 +102,6 @@ export default function Join() {
                   ))}
                 </div>
               )}
-              <p className="auth-sub" style={{ fontSize: 14 }}>
-                <b>{chosen.name}</b> — {plan === 'free' ? 'Free forever' : `₹${(cycle === 'annual' ? chosen.annual : chosen.monthly).toLocaleString('en-IN')}/mo, billed ${cycle}`}
-                {' · '}<Link className="plain-link" to="/pricing">Compare plans</Link>
-              </p>
               <p className="auth-sub consent" style={{ fontSize: 13 }}>
                 By reserving, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
               </p>

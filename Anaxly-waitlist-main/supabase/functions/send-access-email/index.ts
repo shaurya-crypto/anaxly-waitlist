@@ -1,6 +1,6 @@
-// Supabase Edge Function: emails an approved waitlist member their access + payment details via Resend.
+// Supabase Edge Function: emails an approved waitlist member their access + payment details via Sender.net (or Resend fallback).
 // Called by the waitlist_on_update trigger. Deploy with: supabase functions deploy send-access-email --no-verify-jwt
-// Secrets: WAITLIST_FUNCTION_SECRET, RESEND_API_KEY, ACCESS_FROM_EMAIL, ACCESS_URL
+// Secrets: WAITLIST_FUNCTION_SECRET, SENDER_API_KEY (or RESEND_API_KEY), ACCESS_FROM_EMAIL, ACCESS_URL
 // (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided automatically.)
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
@@ -53,18 +53,50 @@ Deno.serve(async (req) => {
     <p style="font-size:13px;color:#64748B">Sign up with this email (${esc(row.email)}) so we can match your seat.</p>
   </div>`
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: env('ACCESS_FROM_EMAIL'),
-      to: [row.email],
-      subject: 'Your Anaxly access is ready',
-      html,
-    }),
-  })
+  let fromEmail = env('ACCESS_FROM_EMAIL')
+  let fromName = 'Anaxly'
+  const match = fromEmail.match(/^(.*?)\s*<([^>]+)>$/)
+  if (match) {
+    fromName = match[1].trim() || 'Anaxly'
+    fromEmail = match[2].trim()
+  }
+
+  const senderApiKey = Deno.env.get('SENDER_API_KEY')
+  const resendApiKey = Deno.env.get('RESEND_API_KEY')
+
+  let res: Response
+  if (senderApiKey) {
+    res = await fetch('https://api.sender.net/v2/message/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${senderApiKey}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        from: { email: fromEmail, name: fromName },
+        to: { email: row.email, name: row.email.split('@')[0] },
+        subject: 'Your Anaxly access is ready',
+        html,
+      }),
+    })
+  } else if (resendApiKey) {
+    res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: env('ACCESS_FROM_EMAIL'),
+        to: [row.email],
+        subject: 'Your Anaxly access is ready',
+        html,
+      }),
+    })
+  } else {
+    throw new Error('missing secret: SENDER_API_KEY or RESEND_API_KEY')
+  }
+
   if (!res.ok) {
-    console.error('resend failed', res.status, await res.text())
+    console.error('email dispatch failed', res.status, await res.text())
     return new Response('email failed', { status: 502 })
   }
 

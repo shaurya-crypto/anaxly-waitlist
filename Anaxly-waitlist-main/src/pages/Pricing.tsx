@@ -41,7 +41,7 @@ interface ComparisonFeature {
   mastery: string | boolean
 }
 
-export default function Pricing() {
+export default function Pricing({ selectOnly = false }: { selectOnly?: boolean }) {
   const navigate = useNavigate()
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual')
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
@@ -435,6 +435,10 @@ export default function Pricing() {
 
   const handleScrollToCompare = (e: React.MouseEvent) => {
     e.preventDefault()
+    if (selectOnly) {
+      navigate('/pricing#compare')
+      return
+    }
     const el = document.getElementById('compare')
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' })
@@ -449,22 +453,26 @@ export default function Pricing() {
         
         {/* Header Hero Section */}
         <section className="text-center max-w-4xl mx-auto space-y-4">
-          <h1 className="font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--ink-primary)] leading-[1.14] sm:leading-[1.12] lg:leading-[1.1]">
-            World-Class <span className="text-[var(--accent-warm)]">1-on-1 Socratic Tutoring</span>, starting at{' '}
-            <span className="underline decoration-[var(--accent-warm-border)] decoration-4 underline-offset-8 text-[var(--ink-primary)] font-black">₹399/mo</span> — at{' '}
-            <span className="text-[var(--accent-warm)] underline decoration-[var(--accent-warm-border)] decoration-4 underline-offset-6">1/4th the Cost</span> of Private Tuitions.
-          </h1>
+          {!selectOnly && (
+            <>
+              <h1 className="font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--ink-primary)] leading-[1.14] sm:leading-[1.12] lg:leading-[1.1]">
+                World-Class <span className="text-[var(--accent-warm)]">1-on-1 Socratic Tutoring</span>, starting at{' '}
+                <span className="underline decoration-[var(--accent-warm-border)] decoration-4 underline-offset-8 text-[var(--ink-primary)] font-black">₹399/mo</span> — at{' '}
+                <span className="text-[var(--accent-warm)] underline decoration-[var(--accent-warm-border)] decoration-4 underline-offset-6">1/4th the Cost</span> of Private Tuitions.
+              </h1>
 
-          <p className="text-base sm:text-lg font-medium text-[var(--ink-secondary)] leading-relaxed max-w-3xl mx-auto">
-            Interactive digital chalkboard, science diagrams, and coordinate graphs are{' '}
-            <span className="text-[var(--accent-warm-hover)] font-bold underline decoration-[var(--accent-warm-border)] decoration-2">
-              100% Free Forever
-            </span>
-            . Unlock live Socratic classes starting at <span className="text-[var(--ink-primary)] font-bold underline decoration-[var(--border-strong)] decoration-2">₹399/mo</span> and face-to-face AI video teachers at <span className="text-[var(--ink-primary)] font-bold underline decoration-[var(--accent-warm-border)] decoration-2">₹899/mo</span>.
-          </p>
+              <p className="text-base sm:text-lg font-medium text-[var(--ink-secondary)] leading-relaxed max-w-3xl mx-auto">
+                Interactive digital chalkboard, science diagrams, and coordinate graphs are{' '}
+                <span className="text-[var(--accent-warm-hover)] font-bold underline decoration-[var(--accent-warm-border)] decoration-2">
+                  100% Free Forever
+                </span>
+                . Unlock live Socratic classes starting at <span className="text-[var(--ink-primary)] font-bold underline decoration-[var(--border-strong)] decoration-2">₹399/mo</span> and face-to-face AI video teachers at <span className="text-[var(--ink-primary)] font-bold underline decoration-[var(--accent-warm-border)] decoration-2">₹899/mo</span>.
+              </p>
 
-          {/* Clean Hairline Scholastic Illustration (No text metadata) */}
-          <HairlineHeroIllustration />
+              {/* Clean Hairline Scholastic Illustration (No text metadata) */}
+              <HairlineHeroIllustration />
+            </>
+          )}
 
           {/* Billing Cycle Toggle */}
           <div className="pt-1 flex items-center justify-center gap-3">
@@ -499,7 +507,7 @@ export default function Pricing() {
         </section>
 
         {/* Pricing Cards Grid - Wider, Roomier Cards */}
-        <section className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 items-stretch">
+          <section className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 items-stretch">
           {plans.map((plan) => {
             const price = billingCycle === 'annual' ? plan.annualPrice : plan.monthlyPrice
             return (
@@ -617,8 +625,10 @@ export default function Pricing() {
           })}
         </section>
 
-        {/* Granular Capability Breakdown Table - Clear Column Separation Lines, No Category Rows */}
-        <section id="compare" className="mt-28 scroll-mt-24">
+        {!selectOnly && (
+          <>
+            {/* Granular Capability Breakdown Table - Clear Column Separation Lines, No Category Rows */}
+            <section id="compare" className="mt-28 scroll-mt-24">
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-10">
             <h2 className="font-sans text-3xl sm:text-5xl font-extrabold text-[var(--ink-primary)] tracking-tight">
               Granular Capability Breakdown
@@ -771,6 +781,8 @@ export default function Pricing() {
             })}
           </div>
         </section>
+          </>
+        )}
       </div>
     </div>
   )

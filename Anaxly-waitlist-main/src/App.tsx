@@ -41,8 +41,8 @@ export default function App() {
     return () => clearTimeout(id)
   }, [pathname])
 
-  // "Reserve my seat" opens the join page directly; the plan can be picked there (or arrives from /pricing).
-  const reserve = () => navigate('/join')
+  // "Reserve my seat" opens the plan-selection view first; choosing a plan continues to /join.
+  const reserve = () => navigate('/reserve')
 
   return (
     <>
@@ -51,6 +51,7 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Landing onReserve={reserve} />} />
+          <Route path="/reserve" element={<Pricing selectOnly />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/join" element={<Join />} />
           <Route path="/careers" element={<Careers />} />
