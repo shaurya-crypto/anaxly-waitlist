@@ -129,7 +129,7 @@ export default function Landing({ onReserve }: { onReserve: () => void }) {
 
       <section className="video-sec" aria-label="Anaxly demo">
         <div className="video-frame">
-          <video src="/demo.mp4" poster="/demo-poster.jpg" controls playsInline muted loop preload="metadata" />
+          <video src="/demo.mp4" poster="/demo-poster.jpg" controls playsInline preload="metadata" aria-label="Anaxly explainer for parents" />
         </div>
       </section>
 
