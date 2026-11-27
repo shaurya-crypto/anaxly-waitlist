@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
-import { joinWaitlist, type Cycle, type PlanId } from '../lib/supabase'
+import { joinWaitlist, rememberReferral, storedReferral, type Cycle, type PlanId } from '../lib/supabase'
 import { PLANS } from '../lib/plans'
 
 const isPlan = (v: string | null): v is PlanId => PLANS.some((p) => p.id === v)
@@ -8,17 +8,35 @@ const isPlan = (v: string | null): v is PlanId => PLANS.some((p) => p.id === v)
 export default function Join() {
   const [params] = useSearchParams()
   const [email, setEmail] = useState('')
+  const [referral, setReferral] = useState(() => (params.get('ref') ?? storedReferral()).toUpperCase())
+  const [myCode, setMyCode] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
   const rawPlan = params.get('plan')
   const plan: PlanId | null = isPlan(rawPlan) ? rawPlan : null
   const cycle: Cycle = params.get('cycle') === 'monthly' ? 'monthly' : 'annual'
-  const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
+  const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error' | 'bad-ref'>('idle')
 
   if (!plan) return <Navigate to="/pricing" replace />
 
   async function submit(e: FormEvent) {
     e.preventDefault()
     setState('sending')
-    setState((await joinWaitlist(email.trim(), plan!, cycle)) ? 'done' : 'error')
+    const res = await joinWaitlist(email.trim(), plan!, cycle, referral)
+    if (res.ok) {
+      setMyCode(res.referralCode)
+      setState('done')
+    } else {
+      setState(res.reason === 'invalid_referral' ? 'bad-ref' : 'error')
+    }
+  }
+
+  const shareLink = myCode ? `${window.location.origin}/?ref=${myCode}` : ''
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareLink)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* clipboard blocked: the link is still visible to copy by hand */ }
   }
 
   const chosen = PLANS.find((p) => p.id === plan)!
@@ -33,6 +51,17 @@ export default function Join() {
             <p className="auth-sub">
               We saved <b>{email}</b>. When your access opens, we will email you the payment and access details.
             </p>
+            {myCode && (
+              <div className="field referral-share">
+                <span>Your referral code</span>
+                <p className="ref-code">{myCode}</p>
+                <p className="auth-sub" style={{ fontSize: 13 }}>Share this link with friends so they can join with your code:</p>
+                <div className="ref-link">
+                  <code>{shareLink}</code>
+                  <button type="button" className="btn btn-ghost md" onClick={copyLink}><span>{copied ? 'Copied' : 'Copy'}</span></button>
+                </div>
+              </div>
+            )}
             <Link to="/pricing" className="btn btn-ghost md"><span>Change plan</span></Link>
           </>
         ) : (
@@ -42,6 +71,22 @@ export default function Join() {
             <p className="auth-sub">Leave your email to hold your seat on this plan. We will email you when access opens, at launch pricing.</p>
             <form onSubmit={submit}>
               <input type="email" required autoFocus placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <label className="field">
+                <span>Referral code <small>(optional)</small></span>
+                <input
+                  type="text"
+                  placeholder="e.g. 7F3A9C21"
+                  value={referral}
+                  maxLength={16}
+                  autoCapitalize="characters"
+                  onChange={(e) => {
+                    const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+                    setReferral(v)
+                    rememberReferral(v)
+                    if (state === 'bad-ref') setState('idle')
+                  }}
+                />
+              </label>
               <div className="field">
                 <span>Plan</span>
                 <p>
@@ -52,6 +97,7 @@ export default function Join() {
               <p className="auth-sub consent" style={{ fontSize: 13 }}>
                 By reserving, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
               </p>
+              {state === 'bad-ref' && <p className="err">That referral code isn't valid. Check it, or leave the field empty.</p>}
               {state === 'error' && <p className="err">Something went wrong. Please try again.</p>}
               <button className="btn btn-primary md" disabled={state === 'sending'}>
                 <span>{state === 'sending' ? 'Reserving…' : 'Reserve my seat'}</span>

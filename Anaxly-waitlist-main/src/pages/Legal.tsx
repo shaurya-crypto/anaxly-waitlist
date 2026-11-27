@@ -32,6 +32,7 @@ export function Privacy() {
         <li><strong>Your email address.</strong></li>
         <li><strong>The plan and billing cycle you chose</strong> (for example, Scholar, billed annually).</li>
         <li><strong>When you joined</strong>, and whether and when we sent you an access email.</li>
+        <li><strong>Referral codes:</strong> the code we give you to share, and the code you entered (if any) when you joined.</li>
       </ul>
       <p>We do not collect names, phone numbers or payment details on this site, and we do not use tracking or advertising cookies.</p>
 
@@ -40,6 +41,7 @@ export function Privacy() {
         <li>To hold your place on the waitlist for the plan you chose.</li>
         <li>To email you once when your access opens, with payment and access details.</li>
         <li>To reply if you contact us.</li>
+        <li>To see how many people joined using your referral code.</li>
       </ul>
 
       <h2>4. Third-Party Sub-Processors</h2>

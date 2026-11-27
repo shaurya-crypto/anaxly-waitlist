@@ -4,7 +4,7 @@ Visitors leave an email and a plan. There are no accounts and no links to the ma
 When you tick `approved` on a row, they get an email with their payment + access details.
 
 ## 1. Create the table
-Supabase → SQL Editor → run `supabase/migrations/20261123000000_waitlist.sql`.
+Supabase → SQL Editor → run `supabase/migrations/20261123000000_waitlist.sql`, then `20261127000000_waitlist_referrals.sql` (referral codes).
 
 ## 2. Resend
 1. Create an account at resend.com, verify the sending domain (e.g. `anaxly.com`).
@@ -30,3 +30,7 @@ select vault.create_secret('<long-random-string>', 'waitlist_function_secret');
 ## Granting access
 Table Editor → `waitlist` → tick `approved` on a row → the email goes out and
 `access_email_sent_at` is filled in. Each row is emailed only once.
+
+## Referral codes
+Every row gets a `referral_code`; a signup's entered code is stored in `referred_by`.
+See who referred how many people with `select * from waitlist_referral_counts order by referrals desc;`.
