@@ -10,7 +10,7 @@ export default function Footer({ onReserve }: { onReserve: () => void }) {
           <CtaPair onReserve={onReserve} size="lg" />
           <nav aria-label="Footer Navigation" className="footer-nav">
             <Link className="lhl" to="/pricing">Pricing</Link>
-            <a className="lhl" href="mailto:careers@anaxly.com?subject=Careers%20at%20Anaxly">Careers</a>
+            <Link className="lhl" to="/careers">Careers</Link>
             <a className="lhl" href="mailto:support@anaxly.com?subject=Contact%20Anaxly">Contact</a>
             <a className="lhl" href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter <span aria-hidden="true">↗</span></a>
             <a className="lhl" href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
