@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, Navigate, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { joinWaitlist, rememberReferral, storedReferral, type Cycle, type PlanId } from '../lib/supabase'
 import { PLANS } from '../lib/plans'
 
@@ -11,17 +11,16 @@ export default function Join() {
   const [referral, setReferral] = useState(() => (params.get('ref') ?? storedReferral()).toUpperCase())
   const [myCode, setMyCode] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  // Plan and cycle arrive from /pricing when set; "Reserve my seat" lands here with none, so default to the popular plan.
   const rawPlan = params.get('plan')
-  const plan: PlanId | null = isPlan(rawPlan) ? rawPlan : null
-  const cycle: Cycle = params.get('cycle') === 'monthly' ? 'monthly' : 'annual'
+  const [plan, setPlan] = useState<PlanId>(isPlan(rawPlan) ? rawPlan : 'topper')
+  const [cycle, setCycle] = useState<Cycle>(params.get('cycle') === 'monthly' ? 'monthly' : 'annual')
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error' | 'bad-ref'>('idle')
-
-  if (!plan) return <Navigate to="/pricing" replace />
 
   async function submit(e: FormEvent) {
     e.preventDefault()
     setState('sending')
-    const res = await joinWaitlist(email.trim(), plan!, cycle, referral)
+    const res = await joinWaitlist(email.trim(), plan, cycle, referral)
     if (res.ok) {
       setMyCode(res.referralCode)
       setState('done')
@@ -87,13 +86,25 @@ export default function Join() {
                   }}
                 />
               </label>
-              <div className="field">
+              <label className="field">
                 <span>Plan</span>
-                <p>
-                  <b>{chosen.name}</b> — {plan === 'free' ? 'Free forever' : `₹${(cycle === 'annual' ? chosen.annual : chosen.monthly).toLocaleString('en-IN')}/mo, billed ${cycle}`}
-                  {' · '}<Link to="/pricing">Change</Link>
-                </p>
-              </div>
+                <select value={plan} onChange={(e) => setPlan(e.target.value as PlanId)}>
+                  {PLANS.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+              </label>
+              {plan !== 'free' && (
+                <div className="cycle" role="group" aria-label="Billing cycle">
+                  {(['monthly', 'annual'] as const).map((c) => (
+                    <button key={c} type="button" aria-pressed={cycle === c} className={cycle === c ? 'on' : ''} onClick={() => setCycle(c)}>
+                      {c === 'monthly' ? 'Monthly' : 'Annual'}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <p className="auth-sub" style={{ fontSize: 14 }}>
+                <b>{chosen.name}</b> — {plan === 'free' ? 'Free forever' : `₹${(cycle === 'annual' ? chosen.annual : chosen.monthly).toLocaleString('en-IN')}/mo, billed ${cycle}`}
+                {' · '}<Link className="plain-link" to="/pricing">Compare plans</Link>
+              </p>
               <p className="auth-sub consent" style={{ fontSize: 13 }}>
                 By reserving, you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.
               </p>
