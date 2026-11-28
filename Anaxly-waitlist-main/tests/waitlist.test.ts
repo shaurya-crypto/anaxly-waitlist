@@ -86,6 +86,7 @@ test('email helpers escape HTML and build subscription confirmation', () => {
   assert.match(html, /pay_test123/)
   assert.match(html, /order_test123/)
   assert.match(html, /AB12CD34/)
+  assert.match(html, /https:\/\/www\.anaxly\.in\/\?ref=AB12CD34/)
   assert.match(html, /support@anaxly\.in/)
 })
 

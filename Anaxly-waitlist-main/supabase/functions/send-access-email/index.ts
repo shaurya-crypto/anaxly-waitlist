@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   if (kind === 'welcome') {
     if (row.welcome_email_sent_at) return new Response('skipped', { status: 200 })
 
-    const siteUrl = (Deno.env.get('WAITLIST_SITE_URL') || 'https://anaxly.in').replace(/\/+$/, '')
+    const siteUrl = (Deno.env.get('WAITLIST_SITE_URL') || 'https://www.anaxly.in').replace(/\/+$/, '')
     const refLink = row.referral_code ? `${siteUrl}/?ref=${encodeURIComponent(row.referral_code)}` : siteUrl
 
     const html = `

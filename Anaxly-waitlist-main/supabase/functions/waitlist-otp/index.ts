@@ -100,7 +100,13 @@ Deno.serve(async (req) => {
         html,
         fromEmail: getOtpSender(),
       })
-    } catch {
+    } catch (err) {
+      // Provider HTTP errors are logged in sendBrevoEmail; this also captures
+      // fetch/network failures that otherwise look like an unexplained 502.
+      console.error(
+        'otp email send failed:',
+        err instanceof Error ? `${err.name}: ${err.message}` : String(err),
+      )
       await db.from('waitlist_otps').delete().eq('id', insertedOtp.id)
       return json({ ok: false, error: 'email_failed', message: 'Failed to send verification email. Please check the address and try again.' }, 502)
     }

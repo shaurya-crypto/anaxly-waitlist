@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   createCheckoutOrder,
+  getPublicSiteOrigin,
   rememberReferral,
   reserveVerifiedWaitlist,
   sendEmailOtp,
@@ -294,7 +295,7 @@ export default function Join() {
   }
 
   const myReferralCode = done?.kind === 'paid' ? done.subscription.referralCode : done?.referralCode
-  const shareLink = myReferralCode ? `${window.location.origin}/?ref=${myReferralCode}` : ''
+  const shareLink = myReferralCode ? `${getPublicSiteOrigin()}/?ref=${myReferralCode}` : ''
 
   async function copyLink() {
     if (!shareLink) return

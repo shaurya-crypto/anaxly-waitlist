@@ -40,6 +40,10 @@ begin
   end if;
 end $$;
 
+-- Remove legacy Sender.net BEFORE triggers that pre-set *_email_sent_at and block Brevo triggers.
+drop trigger if exists trg_waitlist_welcome on public.waitlist;
+drop trigger if exists trg_waitlist_access on public.waitlist;
+
 -- Re-assert trigger guards so paid subscribers never receive duplicate welcome/access emails.
 create or replace function public.waitlist_on_insert()
 returns trigger

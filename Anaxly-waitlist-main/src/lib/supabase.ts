@@ -1,12 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+const DEFAULT_SUPABASE_URL = 'https://fdhxtsleoejoincdacyq.supabase.co'
+const DEFAULT_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkaHh0c2xlb2Vqb2luY2RhY3lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyOTQ4NzUsImV4cCI6MjEwNjg3MDg3NX0.s8SARLbWj065H9_5ww3cr2kfUNlP9uySYzovRPTlguc'
 
-if (!url || !key) console.warn('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY missing: waitlist signups disabled.')
+const url = ((import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim()) || DEFAULT_SUPABASE_URL
+const key = ((import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim()) || DEFAULT_SUPABASE_ANON_KEY
 
 // Anon client only: no auth sessions, no redirects.
-export const supabase = createClient(url ?? 'http://localhost', key ?? 'missing', {
+export const supabase = createClient(url, key, {
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
 })
 
@@ -148,6 +150,17 @@ export function verifyCheckoutPayment(
   )
 }
 
+export function getPublicSiteOrigin(
+  loc: { hostname: string; origin: string } | undefined = typeof window !== 'undefined' ? window.location : undefined,
+): string {
+  const configured = (import.meta.env.VITE_SITE_URL as string | undefined)?.trim().replace(/\/+$/, '')
+  if (configured) return configured
+  if (loc && loc.hostname !== 'localhost' && loc.hostname !== '127.0.0.1') {
+    return loc.origin.replace(/\/+$/, '')
+  }
+  return 'https://www.anaxly.in'
+}
+
 const REF_KEY = 'anaxly_ref'
 
 /** Remembers a ?ref= code from any landing URL so it survives the pricing step. */
@@ -160,5 +173,12 @@ export function rememberReferral(code: string | null) {
 }
 
 export function storedReferral(): string {
+  if (typeof window !== 'undefined') {
+    const urlRef = new URLSearchParams(window.location.search).get('ref')?.trim().toUpperCase()
+    if (urlRef) {
+      rememberReferral(urlRef)
+      return urlRef
+    }
+  }
   try { return sessionStorage.getItem(REF_KEY) ?? '' } catch { return '' }
 }

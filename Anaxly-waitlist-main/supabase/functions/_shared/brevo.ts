@@ -85,7 +85,7 @@ export async function sendBrevoEmail({ toEmail, subject, html, fromEmail, replyT
 }
 
 export function getWaitlistSender(): string {
-  return readEnv('WAITLIST_FROM_EMAIL') || readEnv('ACCESS_FROM_EMAIL') || 'Anaxly <support@anaxly.in>'
+  return readEnv('WAITLIST_FROM_EMAIL') || 'Anaxly <support@anaxly.in>'
 }
 
 export function getOtpSender(): string {
@@ -112,7 +112,7 @@ export interface SubscriptionEmailParams {
 
 export function buildSubscriptionConfirmationHtml(p: SubscriptionEmailParams): string {
   const planInfo = PLANS[p.plan] ?? PLANS.topper
-  const siteUrl = (readEnv('WAITLIST_SITE_URL') || 'https://anaxly.in').replace(/\/+$/, '')
+  const siteUrl = (readEnv('WAITLIST_SITE_URL') || 'https://www.anaxly.in').replace(/\/+$/, '')
   const accessUrl = readEnv('ACCESS_URL') || `${siteUrl}/pricing`
   const refLink = p.referralCode ? `${siteUrl}/?ref=${encodeURIComponent(p.referralCode)}` : ''
   const fmtDate = (iso?: string | null) =>

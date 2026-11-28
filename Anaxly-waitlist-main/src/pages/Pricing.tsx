@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { PlanId } from '../lib/supabase'
+import { storedReferral, type PlanId } from '../lib/supabase'
 import { Check, ArrowRight, HelpCircle, Star, Users, Tv, Clock } from 'lucide-react'
 import {
   HairlineHeroIllustration,
@@ -607,7 +607,10 @@ export default function Pricing({ selectOnly = false }: { selectOnly?: boolean }
                 <div className="pt-4 border-t border-[var(--border-subtle)]">
                   <button
                     type="button"
-                    onClick={() => navigate(`/join?plan=${plan.id}&cycle=${billingCycle}`)}
+                    onClick={() => {
+                      const ref = storedReferral()
+                      navigate(`/join?plan=${plan.id}&cycle=${billingCycle}${ref ? `&ref=${encodeURIComponent(ref)}` : ''}`)
+                    }}
                     className={`w-full inline-flex items-center justify-center gap-2 rounded-full py-3.5 px-4 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                       plan.ctaVariant === 'primary'
                         ? 'bg-[var(--accent-primary)] hover:bg-[var(--accent-primary-hover)] text-white shadow-xs'
