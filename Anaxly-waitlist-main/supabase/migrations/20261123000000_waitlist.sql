@@ -46,7 +46,8 @@ declare
   fn_secret text;
 begin
   new.updated_at := now();
-  if new.approved and not old.approved and new.access_email_sent_at is null then
+  if new.approved and not old.approved and new.access_email_sent_at is null
+     and (to_jsonb(new) ->> 'payment_status') is distinct from 'paid' then
     select decrypted_secret into fn_url from vault.decrypted_secrets where name = 'waitlist_function_url';
     select decrypted_secret into fn_secret from vault.decrypted_secrets where name = 'waitlist_function_secret';
     if fn_url is null or fn_secret is null then

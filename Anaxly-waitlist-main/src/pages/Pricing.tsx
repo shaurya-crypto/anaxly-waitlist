@@ -395,7 +395,7 @@ export default function Pricing({ selectOnly = false }: { selectOnly?: boolean }
     },
     {
       q: 'Which boards and classes are covered?',
-      a: 'We exclusively serve school students in Classes 6 to 12 under CBSE (NCERT syllabus), ICSE (Selina Concise & Morning Star standards), and IB (MYP and DP criterion rubrics). We do not distract students with college entrance exams—every explanation matches your exact school board marking scheme.',
+      a: 'We exclusively serve school students in Classes 9 to 12 under CBSE (NCERT syllabus), ICSE (Selina Concise & Morning Star standards), and IB (MYP and DP criterion rubrics). We do not distract students with college entrance exams—every explanation matches your exact school board marking scheme.',
     },
     {
       q: 'Can I cancel or switch plans at any time?',

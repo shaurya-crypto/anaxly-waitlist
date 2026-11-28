@@ -21,7 +21,10 @@ export default function App() {
   const { pathname, search } = useLocation()
 
   // Keep a ?ref= code from any page so it is prefilled on the join step.
-  useEffect(() => { rememberReferral(new URLSearchParams(search).get('ref')) }, [search])
+  useEffect(() => {
+    const ref = new URLSearchParams(search).get('ref')
+    if (ref) rememberReferral(ref)
+  }, [search])
 
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.09 })

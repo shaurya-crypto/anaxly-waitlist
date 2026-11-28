@@ -44,4 +44,7 @@ jobs:
             echo ""
           done
       - name: Deploy edge functions
-        run: supabase functions deploy send-access-email --no-verify-jwt --remote="$SUPABASE_PROJECT_REF" --yes
+        run: |
+          for fn in send-access-email waitlist-otp waitlist-checkout razorpay-webhook; do
+            supabase functions deploy "$fn" --no-verify-jwt --remote="$SUPABASE_PROJECT_REF" --yes
+          done

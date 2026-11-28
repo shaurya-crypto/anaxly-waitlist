@@ -394,3 +394,21 @@ main { position: relative; z-index: 1; }
 .auth-card .field a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .auth-card .plain-link { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .notfound-code { font-size: clamp(3.5rem, 10vw, 5rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1; color: var(--accent); }
+
+/* OTP verification, single-code checkout, order summary & receipt */
+.inline-row { display: flex; gap: 8px; align-items: stretch; }
+.inline-row input { flex: 1; min-width: 0; }
+.inline-row .btn { flex: none; }
+.verified-pill {
+  display: inline-flex; align-items: center; gap: 6px; justify-self: start;
+  padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 700;
+  background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;
+}
+.ok-text { color: #15803D; font-weight: 600; }
+.summary-box, .receipt-box {
+  background: var(--canvas); border: 1px solid var(--border); border-radius: 16px;
+  padding: 14px 16px; display: grid; gap: 8px; font-size: 14px; color: var(--ink-2);
+}
+.summary-box > div, .receipt-box > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.summary-total { border-top: 1px solid var(--border-strong); padding-top: 8px; margin-top: 2px; font-weight: 800; color: var(--ink); font-size: 15px; }
+.receipt-box code { font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); }
